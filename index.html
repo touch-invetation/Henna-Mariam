@@ -111,11 +111,22 @@
   .seen .sec > :nth-child(2){transition-delay:.25s} .seen .sec > :nth-child(3){transition-delay:.5s}
   .seen .sec > :nth-child(4){transition-delay:.75s} .seen .sec > :nth-child(5){transition-delay:1s}
   .cap{font-family:'Aref Ruqaa',serif; font-size:7.5cqw; color:var(--brown); margin-bottom:3cqw; line-height:1.3}
-  .count{display:flex; justify-content:center; gap:3cqw; direction:rtl}
-  .count div{width:19cqw; padding:2.4cqw 0 1.8cqw; border:1px solid var(--gold); border-radius:2cqw;
+  .count{display:flex; justify-content:center; gap:2cqw; direction:rtl}
+  .count div{width:16cqw; padding:2.4cqw 0 1.8cqw; border:1px solid var(--gold); border-radius:2cqw;
     background:linear-gradient(180deg,#1d4a32,#123422); box-shadow:0 1cqw 3cqw rgba(60,40,10,.25), inset 0 0 0 .8cqw rgba(201,162,78,.18)}
-  .count b{display:block; font-size:8.5cqw; color:var(--gold2); font-weight:700; line-height:1.1}
-  .count span{font-size:3.8cqw; color:#f3e6cc}
+  .count b{display:block; font-size:7.6cqw; font-variant-numeric:tabular-nums; color:var(--gold2); font-weight:700; line-height:1.1}
+  .count span{font-size:3.6cqw; color:#f3e6cc}
+  .count .sec-box b{animation:tickp 1s ease-in-out infinite}
+  @keyframes tickp{0%{opacity:1}50%{opacity:.75}100%{opacity:1}}
+  .today{display:none; font-family:'Aref Ruqaa',serif; font-size:10cqw; line-height:1.2; color:var(--green);
+    background:linear-gradient(180deg,#ecd08c 0%,#c08a2c 48%,#7e5212 100%); -webkit-background-clip:text; background-clip:text; color:transparent;
+    animation:shimmer 3s ease-in-out infinite}
+  .is-today .count,.is-today .cap{display:none} .is-today .today{display:block}
+  .addcal{display:inline-flex; align-items:center; gap:2cqw; margin-top:5cqw; font-family:inherit; font-size:4.4cqw; color:var(--gold2); cursor:pointer;
+    padding:2.4cqw 5.5cqw; border-radius:8cqw; background:linear-gradient(180deg,#22573a,#123422); border:1px solid var(--gold);
+    box-shadow:0 1.2cqw 3cqw rgba(30,50,30,.3)}
+  .addcal:hover{filter:brightness(1.12)}
+  .addcal svg{width:5cqw; height:5cqw}
   .cal{width:76cqw; direction:ltr; font-family:'Cormorant Garamond',serif; color:#2b241c}
   .cal-h{display:flex; align-items:center; justify-content:space-between; padding:2.6cqw 5cqw 2.8cqw;
     background:linear-gradient(180deg,#1d4a32,#123422); box-shadow:0 1cqw 2.5cqw rgba(30,40,20,.2)}
@@ -234,7 +245,10 @@
           <div><b id="cd-d">0</b><span>يوم</span></div>
           <div><b id="cd-h">0</b><span>ساعة</span></div>
           <div><b id="cd-m">0</b><span>دقيقة</span></div>
+          <div class="sec-box"><b id="cd-s">0</b><span>ثانية</span></div>
         </div>
+        <div class="today" id="today">الليلة الليلة! ✨</div>
+        <button class="addcal" id="addcal" type="button"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><rect x="3.5" y="5" width="17" height="15.5" rx="2.5"/><path d="M3.5 10h17M8 3v4M16 3v4M12 13.2v4.6M9.7 15.5h4.6"/></svg>إضافة الموعد للتقويم</button>
       </div>
     </div>
   </div>
@@ -360,15 +374,42 @@
 
   // ---------- countdown (Amman time, start of 13 Dec 2026) ----------
   const target=Date.UTC(2026,11,12,21,0,0); // 13/12/2026 00:00 UTC+3
+  const dayEnd=target+864e5;
+  const cdBox=document.getElementById('cd-d').closest('div').parentNode.parentNode, todayEl=document.getElementById('today');
+  const ar=n=>String(n).replace(/\d/g,c=>'٠١٢٣٤٥٦٧٨٩'[c]);
   function tick(){
-    let ms=Math.max(0,target-Date.now());
-    const d=Math.floor(ms/864e5); ms-=d*864e5; const h=Math.floor(ms/36e5); ms-=h*36e5; const m=Math.floor(ms/6e4);
-    const ar=n=>String(n).replace(/\d/g,c=>'٠١٢٣٤٥٦٧٨٩'[c]);
+    const now=Date.now();
+    if(now>=target){ cdBox.classList.add('is-today'); todayEl.textContent= now<dayEnd ? 'الليلة الليلة! ✨' : 'ألف مبروك يا مريم ✨'; return; }
+    let ms=target-now;
+    const d=Math.floor(ms/864e5); ms-=d*864e5; const h=Math.floor(ms/36e5); ms-=h*36e5; const m=Math.floor(ms/6e4); ms-=m*6e4; const sc=Math.floor(ms/1e3);
     document.getElementById('cd-d').textContent=ar(d);
     document.getElementById('cd-h').textContent=ar(h);
     document.getElementById('cd-m').textContent=ar(m);
+    document.getElementById('cd-s').textContent=ar(sc);
   }
-  tick(); setInterval(tick,30000);
+  tick(); setInterval(tick,1000);
+
+  // ---------- add to calendar ----------
+  const EV={title:'ليلة حنّة مريم', place:'Embassy Suites by Hilton', start:'20261213', end:'20261214', details:'بحضوركم تكتمل فرحتنا'};
+  document.getElementById('addcal').addEventListener('click',()=>{
+    const ua=navigator.userAgent, apple=/iPhone|iPad|iPod|Macintosh/.test(ua);
+    if(apple){
+      const ics=['BEGIN:VCALENDAR','VERSION:2.0','PRODID:-//hennaa//AR','CALSCALE:GREGORIAN','BEGIN:VEVENT',
+        'UID:mariam-henna-20261213@invite','DTSTAMP:20261112T000000Z',
+        'DTSTART;VALUE=DATE:'+EV.start,'DTEND;VALUE=DATE:'+EV.end,
+        'SUMMARY:'+EV.title,'LOCATION:'+EV.place,'DESCRIPTION:'+EV.details,
+        'BEGIN:VALARM','ACTION:DISPLAY','DESCRIPTION:'+EV.title,'TRIGGER:-PT15H','END:VALARM',
+        'END:VEVENT','END:VCALENDAR'].join('\r\n');
+      const a=document.createElement('a');
+      a.href='data:text/calendar;charset=utf-8,'+encodeURIComponent(ics);
+      a.download='mariam-henna.ics'; document.body.appendChild(a); a.click(); a.remove();
+    } else {
+      const u='https://calendar.google.com/calendar/render?action=TEMPLATE'
+        +'&text='+encodeURIComponent(EV.title)+'&dates='+EV.start+'/'+EV.end
+        +'&location='+encodeURIComponent(EV.place)+'&details='+encodeURIComponent(EV.details);
+      window.open(u,'_blank','noopener');
+    }
+  });
 })();
 </script>
 </body>
