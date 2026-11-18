@@ -3,13 +3,13 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>ليلة حنّة مريم</title>
+<title>ليلة الحنّة</title>
 <meta name="description" content="">
 
     <!-- Open Graph Meta Tags -->
     <meta property="og:url" content="https://touch-invetation.github.io/Henna-Mariam/" />
     <meta property="og:type" content="website" />
-    <meta property="og:title" content="ليلة حنّة مريم" />
+    <meta property="og:title" content="ليلة الحنّة" />
     <meta property="og:description" content="" />
     <meta property="og:image" content="https://touch-invetation.github.io/Henna-Mariam/invite.png" />
     <meta property="og:image:secure_url" content="https://touch-invetation.github.io/Henna-Mariam/invite.png" />
@@ -21,7 +21,7 @@
     <meta name="twitter:card" content="summary" />
     <meta property="twitter:domain" content="touch-invetation.github.io" />
     <meta property="twitter:url" content="https://touch-invetation.github.io/Henna-Mariam/" />
-    <meta name="twitter:title" content="ليلة حنّة مريم" />
+    <meta name="twitter:title" content="ليلة الحنّة" />
     <meta name="twitter:description" content="" />
     <meta name="twitter:image" content="https://touch-invetation.github.io/Henna-Mariam/invite.png" />
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -457,14 +457,14 @@
     const ua=navigator.userAgent, apple=/iPhone|iPad|iPod|Macintosh/.test(ua);
     if(apple){
       const ics=['BEGIN:VCALENDAR','VERSION:2.0','PRODID:-//hennaa//AR','CALSCALE:GREGORIAN','BEGIN:VEVENT',
-        'UID:mariam-henna-20261213@invite','DTSTAMP:20261112T000000Z',
+        'UID:henna-20261213@invite','DTSTAMP:20261112T000000Z',
         'DTSTART:'+EV.start,'DTEND:'+EV.end,
         'SUMMARY:'+EV.title,'LOCATION:'+EV.place,'DESCRIPTION:'+EV.details,
         'BEGIN:VALARM','ACTION:DISPLAY','DESCRIPTION:'+EV.title,'TRIGGER:-P1D','END:VALARM',
         'END:VEVENT','END:VCALENDAR'].join('\r\n');
       const a=document.createElement('a');
       a.href='data:text/calendar;charset=utf-8,'+encodeURIComponent(ics);
-      a.download='mariam-henna.ics'; document.body.appendChild(a); a.click(); a.remove();
+      a.download='henna-night.ics'; document.body.appendChild(a); a.click(); a.remove();
     } else {
       const u='https://calendar.google.com/calendar/render?action=TEMPLATE'
         +'&text='+encodeURIComponent(EV.title)+'&dates='+EV.start+'/'+EV.end
